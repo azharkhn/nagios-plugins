@@ -25,13 +25,13 @@ else {
 	$interval_minutes = $ARGV[5];
 	
 	#Database Settings
-	my $db_driver = "mysql"; 
-	my $db_name = "voipmonitor";
-	my $db_host = "localhost";
-	my $db_port = "3306";
-	my $db_user = "<username>";
-	my $db_pass = "<password>";
-	my $db_dsn = "dbi:$db_driver:$db_name:$db_host:$db_port";
+	$db_driver = "mysql"; 
+	$db_name = "voipmonitor";
+	$db_host = "127.0.0.1";
+	$db_port = "3306";
+	$db_user = "<username>";
+	$db_pass = "<password>";
+	$db_dsn = "dbi:$db_driver:$db_name:$db_host:$db_port";
 	$dbh = DBI->connect($db_dsn, $db_user, $db_pass) or die "Connection Error: $DBI::errstr\n";
 	$sth = $dbh->prepare("SELECT SUM(IF(`a_mos_adapt` < $warning_value AND `a_mos_adapt` > $critical_value, 1, 0)) AS 'warning', SUM(IF(`a_mos_adapt` <= $critical_value, 1, 0)) AS 'critical', COUNT(*) AS 'total' FROM `cdr` WHERE `a_mos_adapt` > 0 AND `calldate` >= NOW() - INTERVAL $interval_minutes MINUTE;");
 	$sth->execute() or die $DBI::errstr;
